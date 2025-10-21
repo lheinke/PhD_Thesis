@@ -1743,7 +1743,8 @@ without written permission from the publisher.
 \textblockcolour{}
 \vspace{-\parskip}
 \begin{flushleft}
-  \if\empty\@subtitle
+\if\empty\@subtitle 
+    \leavevmode
     \coverfontsize{20}{22}\titlepagefont\textbf{\MakeUppercase\@title}\\[3ex]
   \else
     \coverfontsize{20}{22}\titlepagefont\textbf{\MakeUppercase\@title}\\[1ex]
