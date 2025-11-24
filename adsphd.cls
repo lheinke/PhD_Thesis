@@ -953,6 +953,17 @@ LuaLaTeX or XeTeX}
   \fi
 }
 
+\newcommand{\includeabstractde}[1]{%
+  \selectlanguage{ngerman}
+  \IncludeUnnumberedChapterIfExists{#1}{\abstnlname}{\instructionsabstract}
+        {\phantomsection}
+  \ifadsphd@british
+  \selectlanguage{british}
+  \else
+  \selectlanguage{english}
+  \fi
+}
+
 \newcommand{\includeabbreviations}[1]{%
   % Use this command when making the abbreviation manually. Using the
   \IncludeUnnumberedChapterIfExists{#1}{Abbreviations}{\instructionslistofsymbols}{}
