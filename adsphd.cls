@@ -1365,18 +1365,6 @@ experimental data, examples, figures, etc.).
  \end{textblock*}
 }
 
-\newcommand{\useCustomCoverpageIfExists}{%
-  \IfFileExists{\@customcoverpage}{%
-    \typeout{adsphd.cls: Using custom cover page (\@customcoverpage)}
-    \input{\@customcoverpage}
-  }{
-    \typeout{adsphd.cls: Cannot find custom cover page 
-      (\@customcoverpage). Restoring default cover page.}
-    \let\makefrontcovergeneral\orig@makefrontcovergeneral
-    \let\makebackcovergeneral\orig@makebackcovergeneral
-  }
-}{}
-
 \newcommand{\makefullcoverpage}[2]{%
   \typeout{Making full cover page}
   % #1: spinewidth
@@ -1455,9 +1443,6 @@ experimental data, examples, figures, etc.).
     \typeout{Tikz not found}
   }
 }
-
-\let\makefrontcover\makefrontcoverXXIV
-\let\makebackcover\makebackcoverXXIV
 
 \newcommand{\coverfontsize}[2]{%
   \count1=#1
@@ -2033,7 +2018,22 @@ without written permission from the publisher.
 }
 
 
+\let\makefrontcover\makefrontcoverXXIV
+\let\makebackcover\makebackcoverXXIV
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\useCustomCoverpageIfExists}{%
+  \IfFileExists{\@customcoverpage}{%
+    \typeout{adsphd.cls: Using custom cover page (\@customcoverpage)}
+    \input{\@customcoverpage}
+  }{
+    \typeout{adsphd.cls: Cannot find custom cover page 
+      (\@customcoverpage). Restoring default cover page.}
+    \let\makefrontcover\orig@makefrontcover
+    \let\makebackcover\orig@makebackcover
+  }
+}{}
 
 \def\setcustomcoverpage#1{%
   \gdef\@customcoverpage{#1}

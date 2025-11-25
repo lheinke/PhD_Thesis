@@ -3,7 +3,7 @@
     faculty=fw,
     department=nat,
     phddegree=ste,
-    joint
+    %joint
 ]{adsphd}
 
 %\documentclass[showinstructions,faculty=firw,department=cws,phddegree=cws,helveticaneue]{adsphd}
@@ -41,11 +41,15 @@
 
 % Your research group within the department
 % e.g. DTAI, MICAS
-\researchgroup{XXXXX}
-\website{http://www.XXXXX.cs.kuleuven.be} % Leave empty to hide
-\email{first.last@cs.kuleuven.be} % Leave empty to hide
+% TODO: Figure out what to do about the research group and 
+\researchgroup{Moin???}
+\website{} % Leave empty to hide
+\email{} % Leave empty to hide
 
-\address{Celestijnenlaan 200A box 2402}
+% TODO: Add box value?
+\address{Celestijnenlaan 200D}
+% TODO: Check if the `B-` is needed or if perhaps instead adding Belgium below is better.
+\addresscity{3001 Leuven}
 % \addresscity{B-3001 Leuven} % This is the default value. Note
                               % that 'B-3001 Heverlee' is _incorrect_!!
                               % https://www.kuleuven.be/english/language-guide
@@ -53,8 +57,8 @@
 %%%%%%%%%%%% For joint PhDs only %%%%%%%%%%%%%%%%%%%%%%
 % Add 'joint' to the options to the adsphd class.
 % Change "PARTNER_LOGO.eps" in image folder!
-\facultypartner{Faculty Partner}
-\departmentpartner{Department Partner}
+\facultypartner{College of Science and Engineering}
+\departmentpartner{School of GeoSciences}
 \addresspartner{Address Partner}
 \addresscitypartner{City Partner}
 \emailpartner{} % Leave empty to hide
@@ -81,7 +85,7 @@
 %\setlength{\defaultbbleed}{0mm}
 
 % Set custom cover page
-% \setcustomcoverpage{mycoverpage.tex} % mycoverpage.tex is the default
+\setcustomcoverpage{coverpage.tex} % mycoverpage.tex is the default
 
 %%% COVER: End settings %%%
 
@@ -136,7 +140,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\makefrontcoverXXIV
+\makefrontcover
 
 \maketitle
 
@@ -167,6 +171,10 @@
 \tableofcontents
 \listoffigures
 \listoftables
+
+% #region new
+
+% #endregion
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -223,7 +231,7 @@
 
 \includepublications{publications}
 
-\makebackcoverXXIV
+\makebackcover
 
 \end{document}
 
