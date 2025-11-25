@@ -1,0 +1,42 @@
+{
+	"% #region 📋 COPIED": {
+		"prefix": "region copied",
+		"scope": "latex",
+		"body": [
+			"% #region 📋 COPIED",
+			"$0",
+			"% #endregion"
+		],
+		"description": "Inserts a COPIED region block (LaTeX only)"
+	},
+	"% #region ✏️ EDITED": {
+		"prefix": "region edited",
+		"scope": "latex",
+		"body": [
+			"% #region ✏️ EDITED",
+			"$0",
+			"% #endregion"
+		],
+		"description": "Inserts an EDITED region block (LaTeX only)"
+	},
+	"% #region ✨ NEW": {
+		"prefix": "region new",
+		"scope": "latex",
+		"body": [
+			"% #region ✨ NEW",
+			"$0",
+			"% #endregion"
+		],
+		"description": "Inserts a NEW region block (LaTeX only)"
+	},
+	"% #region 🤖 AI": {
+		"prefix": "region ai",
+		"scope": "latex",
+		"body": [
+			"% #region 🤖 AI",
+			"$0",
+			"% #endregion"
+		],
+		"description": "Inserts a NEW region block (LaTeX only)"
+	}
+}

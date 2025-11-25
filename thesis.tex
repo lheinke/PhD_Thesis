@@ -3,8 +3,13 @@
     faculty=fw,
     department=nat,
     phddegree=ste,
-    %joint
+    %helveticaneue,
+    joint,
+    croppedpdf
 ]{adsphd}
+
+% Custom local package to extend adsphd.cls functionality
+\usepackage{thesis}
 
 %\documentclass[showinstructions,faculty=firw,department=cws,phddegree=cws,helveticaneue]{adsphd}
 %\documentclass[showinstructions,faculty=firw,department=cws,phddegree=cws]{adsphd}
@@ -41,8 +46,11 @@
 
 % Your research group within the department
 % e.g. DTAI, MICAS
-% TODO: Figure out what to do about the research group and 
+% TODO: Figure out what to do about the research group
 \researchgroup{Moin???}
+
+\institute{Institute of Astronomy}
+
 \website{} % Leave empty to hide
 \email{} % Leave empty to hide
 
@@ -53,6 +61,7 @@
 % \addresscity{B-3001 Leuven} % This is the default value. Note
                               % that 'B-3001 Heverlee' is _incorrect_!!
                               % https://www.kuleuven.be/english/language-guide
+\addresscountry{Belgium}
 
 %%%%%%%%%%%% For joint PhDs only %%%%%%%%%%%%%%%%%%%%%%
 % Add 'joint' to the options to the adsphd class.
@@ -65,8 +74,8 @@
 \websitepartner{} % Leave empty to hide
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\date{February 2025}
-\copyyear{2025}
+\date{UNKNOWN 2026}
+\copyyear{2026}
 \copyaddress{Leuven, Belgium}
 %\udc{XXX.XX}             % UDC, deposit number and ISBN are no longer necessary.
 %\depot{XXXX/XXXX/XX}     % Leave out the initial D/ (it is added
@@ -132,6 +141,9 @@
 \usepackage{amsmath}
 
 
+% Custom imports
+\usepackage{tikz}
+
 % this line will be replaced to create a diff
 % (see make_diff.sh)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -140,17 +152,18 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\fullcoverpagefalse % Disable full cover page flag
 \makefrontcover
 
 \maketitle
 
 \frontmatter % to get \pagenumbering{roman}
 
-\includepreface{preface}
-\includepopabstract{popabstract}
-\includepopabstractnl{popabstractnl}
-\includeabstract{abstract}
-\includeabstractnl{abstractnl}
+%\includepreface{preface}
+%\includepopabstract{popabstract}
+%\includepopabstractnl{popabstractnl}
+%\includeabstract{abstract}
+%\includeabstractnl{abstractnl}
 
 % To create a list of abbreviations, there are 2 options
 % 1. manual creation of list of abbreviations and inclusion as a chapter

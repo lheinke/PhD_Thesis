@@ -953,17 +953,6 @@ LuaLaTeX or XeTeX}
   \fi
 }
 
-\newcommand{\includeabstractde}[1]{%
-  \selectlanguage{ngerman}
-  \IncludeUnnumberedChapterIfExists{#1}{\abstnlname}{\instructionsabstract}
-        {\phantomsection}
-  \ifadsphd@british
-  \selectlanguage{british}
-  \else
-  \selectlanguage{english}
-  \fi
-}
-
 \newcommand{\includeabbreviations}[1]{%
   % Use this command when making the abbreviation manually. Using the
   \IncludeUnnumberedChapterIfExists{#1}{Abbreviations}{\instructionslistofsymbols}{}
@@ -1365,6 +1354,19 @@ experimental data, examples, figures, etc.).
  \end{textblock*}
 }
 
+\newcommand{\useCustomCoverpageIfExists}{%
+  \IfFileExists{\@customcoverpage}{%
+    \typeout{adsphd.cls: Using custom cover page (\@customcoverpage)}
+    \input{\@customcoverpage}
+  }{
+    \typeout{adsphd.cls: Cannot find custom cover page 
+      (\@customcoverpage). Restoring default cover page.}
+    \let\makefrontcovergeneral\orig@makefrontcovergeneral
+    \let\makebackcovergeneral\orig@makebackcovergeneral
+    \let\makespinegeneral\orig@makespinegeneral
+  }
+}{}
+
 \newcommand{\makefullcoverpage}[2]{%
   \typeout{Making full cover page}
   % #1: spinewidth
@@ -1383,13 +1385,13 @@ experimental data, examples, figures, etc.).
   %\end{textblock*}
 
   \setlength{\skiplen}{0mm+\rbleed}
-  \makebackcovergeneralXXIV{\skiplen}{0}
+  \makebackcovergeneral{\skiplen}{0}
 
   \setlength{\skiplen}{\lbleed+\rbleed+\adsphdpaperwidth}
-  \makespinegeneralXXIV{\skiplen}{0}{#1}{#2}
+  \makespinegeneral{\skiplen}{0}{#1}{#2}
 
   \setlength{\skiplen}{\rbleed+2\lbleed+\adsphdpaperwidth+\adsphdspinewidth}
-  \makefrontcovergeneralXXIV{\skiplen}{0}
+  \makefrontcovergeneral{\skiplen}{0}
 
   \drawextracroplines
 }
@@ -1569,11 +1571,11 @@ experimental data, examples, figures, etc.).
   \cleartextposbox
 }
 
-\newcommand{\makefrontcoverXXIV}{\makefrontcovergeneralXXIV{0mm}{1}}
+\newcommand{\makefrontcover}{\makefrontcovergeneral{0mm}{1}}
 \ifadsphd@epub
   % The cover uses absolute positioning and does not scale automatically
   % to smaller page sizes, thus leave out
-  \renewcommand{\makefrontcoverXXIV}{}
+  \renewcommand{\makefrontcover}{}
 \fi
 \newcommand{\makefrontcovergeneralXXIV}[2]{%
   \typeout{adsphd.cls: Create cover using bleed = (\the\rbleed,\the\lbleed,\the\tbleed,\the\bbleed)}
@@ -1804,131 +1806,105 @@ without written permission from the publisher.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Provide back cover using the 2024 (XXIV) layout
 % used by the Arenberg Doctoral School
-\newcommand{\makebackcoverXXIV}{
-    \ifadsphd@joint
-    \makebackcovergeneralXXIVjoint{0mm}{1}
-    \else
-    \makebackcovergeneralXXIV{0mm}{1}
-    \fi
+\newcommand{\makebackcover}{
+    \makebackcovergeneral{0mm}{1}
 }
 \ifadsphd@epub
-  \renewcommand{\makebackcoverXXIV}{}
+  \renewcommand{\makebackcover}{}
 \fi
 \newcommand{\makebackcovergeneralXXIV}[2]{%
-  \typeout{adsphd.cls: Using default back cover page}
-  %
-  % Use Helvetica
-  \ifadsphd@helveticaneue
-  \else
-  \renewcommand{\sfdefault}{\helvetsfdefault}
-  \fi
-  %
-  % Only add empty pages if asked for
-  \ifthenelse{\equal{#2}{1}}
-  {
-    \cleardoublepage \mbox{}
+    \typeout{adsphd.cls: Using default back cover page}
+    %
+    % Use Helvetica
+    \ifadsphd@helveticaneue
+    \else
+        \renewcommand{\sfdefault}{\helvetsfdefault}
+    \fi
+    %
+    % Only add empty pages if asked for
+    \ifthenelse{\equal{#2}{1}}
+    {
+        \cleardoublepage \mbox{}
+        \thispagestyle{empty}
+        \newpage
+    }{}
     \thispagestyle{empty}
-    \newpage
-  }{}
-  \thispagestyle{empty}
-  %
-  % Background colored block
-  \begin{textblock*}{\adsphdpaperwidth+\lbleed+\rbleed}(#1-\rbleed,18mm+\tbleed)
-  %\begin{textblock*}{\adsphdpaperwidth}(0mm+#1,234mm)
-  \textblockcolour{kulprimaryblue}
-  %\vspace{-\parskip}
-  \rule{0pt}{34mm}
-  \end{textblock*}
-  %
-  % Text box with address
-  \begin{textblock*}{124.5mm}(#1,24.5mm+\tbleed)
-  \textblockcolour{}
-  \vspace{-\parskip}
-  %\parbox[c][20mm]{151.2mm+\rbleed}{
-  \begin{flushright}
-    \fontsize{7}{10}\coverfont\color{white}
-    \MakeUppercase\@faculty\\[-1mm]
-    \MakeUppercase\@department\\[-1mm]
-    % \ifdefempty{\@researchgroup}{}{{\MakeUppercase\@researchgroup}}\\[-1mm]
-    {\@address}\\[-1mm]
-    {\@addresspc}\\[-1mm]
-    \ifdefempty{\@email}{}{\@email\\[-1mm]}
-    \ifdefempty{\@website}{}{\@website}
-  \end{flushright}
-  %}
-  \end{textblock*}
-  %
-  % Blue vertical line
-  \begin{textblock*}{1.5mm}(#1+129mm,27.5mm+\tbleed)
-  \textblockcolour{kullightblue}
-  %\vspace{-\parskip}
-  \rule{0pt}{15mm}
-  \end{textblock*}
-  %
-  % Put KULeuven sedes on top
-  \begin{textblock*}{7mm}(135mm+#1,26.9mm+\tbleed)
-  \textblockcolour{}
-  \vspace{-\parskip}
-  \includegraphics*[height=16.3mm]{image/sedes.png}%
-  \end{textblock*}
-}
-
-\let\orig@makebackcovergeneralXXIV\makebackcovergeneralXXIV
-
-\newcommand{\makebackcovergeneralXXIVjoint}[2]{%
-  \typeout{adsphd.cls: Using default back cover page}
-  %
-  % Use Helvetica
-  \ifadsphd@helveticaneue
-  \else
-  \renewcommand{\sfdefault}{\helvetsfdefault}
-  \fi
-  %
-  % Only add empty pages if asked for
-  \ifthenelse{\equal{#2}{1}}
-  {
-    \cleardoublepage \mbox{}
-    \thispagestyle{empty}
-    \newpage
-  }{}
-  \thispagestyle{empty}
-  % 
-  % Blue bar on top
-  \begin{textblock*}{\adsphdpaperwidth+\lbleed+\rbleed}(#1-\rbleed,0mm)
-  \textblockcolour{kulprimaryblue}
-  \rule{0mm}{18mm+\tbleed}
-  \end{textblock*}
-  %
-  % Blue bar below logos
-  \begin{textblock*}{\adsphdpaperwidth+\lbleed+\rbleed}(#1-\rbleed,38mm+\tbleed)
-  \textblockcolour{kulprimaryblue}
-  \rule{0mm}{18mm}
-  \end{textblock*}
-  %
-  % Text box with address KU Leuven
-  \begin{textblock*}{\adsphdpaperwidth+\lbleed+\rbleed}(#1-16mm, 21mm+\tbleed)
-  \textblockcolour{}
-    \fontsize{7}{10}\coverfont
-    \raggedleft
-    \MakeUppercase\@faculty\\[-1mm]
-    \MakeUppercase\@department\\[-1mm]
-    {\@address}\\[-1mm]
-    {\@addresspc}\\[-1mm]
-    \ifdefempty{\@email}{}{\@email\\[-1mm]}
-    \ifdefempty{\@website}{}{\@website\\[-1mm]}
-  \end{textblock*}
-  % 
-  % Text box with address partner university
-  \begin{textblock*}{100mm}(#1+16mm, 21mm+\tbleed)
-  \textblockcolour{}
-    \fontsize{7}{10}\coverfont
-    \MakeUppercase\@facultypartner\\[-1mm]
-    \MakeUppercase\@departmentpartner\\[-1mm]
-    {\@addresspartner}\\[-1mm]
-    {\@addresspcpartner}\\[-1mm]
-    \ifdefempty{\@emailpartner}{}{\@emailpartner\\[-1mm]}
-    \ifdefempty{\@websitepartner}{}{\@websitepartner\\[-1mm]}
-  \end{textblock*}
+    %
+    % Check if it's a joint PhD
+    \ifadsphd@joint
+        % Joint PhD layout
+        % Blue bar on top
+        \begin{textblock*}{\adsphdpaperwidth+\lbleed+\rbleed}(#1-\rbleed,0mm)
+            \textblockcolour{kulprimaryblue}
+            \rule{0mm}{18mm+\tbleed}
+        \end{textblock*}
+        %
+        % Blue bar below logos
+        \begin{textblock*}{\adsphdpaperwidth+\lbleed+\rbleed}(#1-\rbleed,38mm+\tbleed)
+            \textblockcolour{kulprimaryblue}
+            \rule{0mm}{18mm}
+        \end{textblock*}
+        %
+        % Text box with address KU Leuven
+        \begin{textblock*}{\adsphdpaperwidth+\lbleed+\rbleed}(#1-16mm, 21mm+\tbleed)
+            \textblockcolour{}
+            \fontsize{7}{10}\coverfont
+            \raggedleft
+            \MakeUppercase\@faculty\\[-1mm]
+            \MakeUppercase\@department\\[-1mm]
+            {\@address}\\[-1mm]
+            {\@addresspc}\\[-1mm]
+            \ifdefempty{\@email}{}{\@email\\[-1mm]}
+            \ifdefempty{\@website}{}{\@website\\[-1mm]}
+        \end{textblock*}
+        %
+        % Text box with address partner university
+        \begin{textblock*}{100mm}(#1+16mm, 21mm+\tbleed)
+            \textblockcolour{}
+            \fontsize{7}{10}\coverfont
+            \MakeUppercase\@facultypartner\\[-1mm]
+            \MakeUppercase\@departmentpartner\\[-1mm]
+            {\@addresspartner}\\[-1mm]
+            {\@addresspcpartner}\\[-1mm]
+            \ifdefempty{\@emailpartner}{}{\@emailpartner\\[-1mm]}
+            \ifdefempty{\@websitepartner}{}{\@websitepartner\\[-1mm]}
+        \end{textblock*}
+    \else
+        % Single PhD layout
+        % Background colored block
+        \begin{textblock*}{\adsphdpaperwidth+\lbleed+\rbleed}(#1-\rbleed,18mm+\tbleed)
+            \textblockcolour{kulprimaryblue}
+            \rule{0pt}{34mm}
+        \end{textblock*}
+        %
+        % Text box with address
+        \begin{textblock*}{124.5mm}(#1,24.5mm+\tbleed)
+            \textblockcolour{}
+            \vspace{-\parskip}
+            \begin{flushright}
+                \fontsize{7}{10}\coverfont\color{white}
+                \MakeUppercase\@faculty\\[-1mm]
+                \MakeUppercase\@department\\[-1mm]
+                {\@address}\\[-1mm]
+                {\@addresspc}\\[-1mm]
+                \ifdefempty{\@email}{}{\@email\\[-1mm]}
+                \ifdefempty{\@website}{}{\@website}
+            \end{flushright}
+        \end{textblock*}
+        %
+        % Blue vertical line
+        \begin{textblock*}{1.5mm}(#1+129mm,27.5mm+\tbleed)
+            \textblockcolour{kullightblue}
+            \rule{0pt}{15mm}
+        \end{textblock*}
+        %
+        % Put KULeuven sedes on top
+        \begin{textblock*}{7mm}(135mm+#1,26.9mm+\tbleed)
+            \textblockcolour{}
+            \vspace{-\parskip}
+            \includegraphics*[height=16.3mm]{image/sedes.png}%
+        \end{textblock*}
+    \fi
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1940,7 +1916,7 @@ without written permission from the publisher.
 \setlength{\spinetitlewidth}{\defaultspinetitlewidth}
 
 %\newcommand{\makespine}[2]{\makespinegeneralXXIV{xskip}{clearpage}{spinewidth}{spinetitlewidth}}
-\newcommand{\makespine}[2]{\makespinegeneralXXIV{0mm}{1}{#1}{#2}}
+\newcommand{\makespine}[2]{\makespinegeneral{0mm}{1}{#1}{#2}}
 
 \newcommand{\makespinegeneralXXIV}[4]{%
   % Use Helvetica
@@ -2018,22 +1994,10 @@ without written permission from the publisher.
 }
 
 
-\let\makefrontcover\makefrontcoverXXIV
-\let\makebackcover\makebackcoverXXIV
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\newcommand{\useCustomCoverpageIfExists}{%
-  \IfFileExists{\@customcoverpage}{%
-    \typeout{adsphd.cls: Using custom cover page (\@customcoverpage)}
-    \input{\@customcoverpage}
-  }{
-    \typeout{adsphd.cls: Cannot find custom cover page 
-      (\@customcoverpage). Restoring default cover page.}
-    \let\makefrontcover\orig@makefrontcover
-    \let\makebackcover\orig@makebackcover
-  }
-}{}
+\let\makefrontcovergeneral\makefrontcovergeneralXXIV
+\let\makebackcovergeneral\makebackcovergeneralXXIV
+\let\makespinegeneral\makespinegeneralXXIV
 
 \def\setcustomcoverpage#1{%
   \gdef\@customcoverpage{#1}

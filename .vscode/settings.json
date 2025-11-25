@@ -1,0 +1,68 @@
+{
+	"highlight.regexes": {
+		"(% #region 📋 COPIED)": {
+			"decorations": [
+				{
+					"backgroundColor": "#ADD8E6", // Light Blue
+					"color": "#1f1f1f",
+					"fontWeight": "bold"
+				}
+			]
+		},
+		"(% #region 📋 COPIED[\\s\\S]*?% #endregion)": {
+			"decorations": [
+				{
+					"overviewRulerColor": "#ADD8E6", // Light Blue
+				}
+			]
+		},
+		"(% #region ✏️ EDITED)": {
+			"decorations": [
+				{
+					"backgroundColor": "#FFA500", // Orange
+					"color": "#1f1f1f",
+					"fontWeight": "bold"
+				}
+			]
+		},
+		"(% #region ✏️ EDITED[\\s\\S]*?% #endregion)": {
+			"decorations": [
+				{
+					"overviewRulerColor": "#FFA500" // Orange
+				}
+			]
+		},
+		"(% #region ✨ NEW)": {
+			"decorations": [
+				{
+					"backgroundColor": "#90EE90", //Light Green
+					"color": "#1f1f1f",
+					"fontWeight": "bold"
+				}
+			]
+		},
+		"(% #region ✨ NEW[\\s\\S]*?% #endregion)": {
+			"decorations": [
+				{
+					"overviewRulerColor": "#90EE90" //Light Green
+				}
+			]
+		},
+		"(% #region 🤖 AI)": {
+			"decorations": [
+				{
+					"backgroundColor": "#DDA0DD", // Plum
+					"color": "#1f1f1f",
+					"fontWeight": "bold"
+				}
+			]
+		},
+		"(% #region 🤖 AI[\\s\\S]*?% #endregion)": {
+			"decorations": [
+				{
+					"overviewRulerColor": "#DDA0DD" // Plum
+				}
+			]
+		}
+	}
+}

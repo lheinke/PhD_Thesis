@@ -9,6 +9,360 @@
 % My own cover page
 \makeatletter
 
-\renewcommand{\makefrontcover}{}
+\usepackage{thesis} % Custom local package to extend adsphd.cls functionality
+
+\usepackage{contour}
+\contourlength{0.5pt} % Adjust outline thickness (e.g., 0.3pt, 0.5pt, 1pt)
+\newcommand{\outlinetext}[1]{\contour{black}{\color{white}#1}}
+
+\newif\iffullcoverpage
+
+% TODO? Put some of the coordinates in variables to make it easier to adjust later on
+% TODO? What to do with missing top and bottom bleed on front cover?
+
+\newcommand{\frontcoverheader}[1]{%
+  \thispagestyle{empty}
+  % Use Helvetica
+  \ifadsphd@helveticaneue
+  \else
+  \renewcommand{\sfdefault}{\helvetsfdefault}
+  \fi
+  %
+  % Bar below logos
+  \begin{textblock*}{\adsphdpaperwidth+\defaultrbleed}(0mm+#1,27.5mm+\tbleed)
+  %\textblockcolour{kulprimaryblue}
+  %\vspace{-\parskip}
+  %\rule{0pt}{28mm}
+  % HACK: Used to get the PDF to show color that looks correct
+  % TODO? Change the way the color is selected to make sure it works properly for prints
+  \definecolor{kulprimarybluergb}{RGB}{29,141,176}
+% #region 🤖 AI
+  \pgfdeclarehorizontalshading{middlefade}{100bp}{% 160mm with + 5mm bleed on the right
+    color(0bp)=(kulprimarybluergb);
+    color(43.64bp)=(kulprimarybluergb); % 45% of 160mm
+    color(53.33bp)=(uoeuniversityred);  % 55% of 160mm
+    color(100bp)=(uoeuniversityred)
+  }
+  
+  \begin{tikzpicture}
+    \shade[shading=middlefade]
+      (0,0) rectangle (\adsphdpaperwidth+\defaultrbleed, 15mm);
+  \end{tikzpicture}
+% #endregion
+  \end{textblock*}
+  %
+  % Create logo box KU Leuven
+  \newsavebox{\logobox}
+  \savebox{\logobox}{\includegraphics[height=15mm]{image/KULEUVEN_LOGO_2012}}
+  \begin{textblock*}{\wd\logobox}(10mm+#1,10mm+\tbleed)
+  % explicitly turn off block colour to prevent the coloured background from popping up due to misalignment of the logo
+    \textblockcolour{}
+    \usebox{\logobox}
+  \end{textblock*}
+  %
+  % Create logo box partner university
+  \newsavebox{\logoboxpartner}
+  \savebox{\logoboxpartner}{\includegraphics[height=13mm]{image/PARTNER_LOGO}}
+  \begin{textblock*}{\wd\logoboxpartner}(\adsphdpaperwidth+#1-\wd\logoboxpartner-10mm,12mm+\tbleed)
+    \textblockcolour{}
+    \usebox{\logoboxpartner}
+  \end{textblock*}
+  %
+  % Create ADS + faculty box KU Leuven
+  \begin{textblock*}{85mm}(10mm+#1,31.5mm+\tbleed)
+  \textblockcolour{}
+  \coverfont
+  \raggedright
+  \fontsize{10}{11}\selectfont%
+  \def\tmphss{hss}
+  \ifx\tmphss\adsphd@doctoralschool
+  \typeout{adsphd: Cover, smaller font size to fit doctoral school name}
+  \fontsize{10}{11}\selectfont%
+  \fi
+  {\textcolor{white} 
+  {\textbf{\expandafter\MakeUppercase\expandafter\@doctoralschool}\\[.2mm]
+   \@faculty}}
+  \end{textblock*}
+
+  \begin{textblock*}{85mm}(0mm-\lbleed+#1+\adsphdpaperwidth-85mm-10mm,31.5mm+\tbleed)
+  \textblockcolour{}
+  \coverfont
+  \raggedleft
+  \fontsize{10}{11}\selectfont%
+  \def\tmphss{hss}%
+  \ifx\tmphss\adsphd@doctoralschool
+  \typeout{adsphd: Cover, smaller font size to fit doctoral school name}
+  \fontsize{10}{11}\selectfont%
+  \fi
+  {\textcolor{white} 
+  {\textbf{\expandafter\MakeUppercase\expandafter\@departmentpartner}\\[.2mm]
+   \@facultypartner}}
+  \end{textblock*}
+}
+
+\newcommand{\frontcoverfooter}[1]{%
+  % Add thin bar to the bottom to extend around entire cover
+
+  % Only add empty pages if asked for
+  \ifthenelse{\equal{#1}{1}}
+  {
+    \newpage
+    \thispagestyle{empty} \mbox{}
+    \newpage
+  }{}
+  %
+  % Restore font
+  \renewcommand{\sfdefault}{\origsfdefault}
+  % Empty textpos boxes (interferes with some other packages such as
+  % Tikz externalize
+  \cleartextposbox
+}
+
+\renewcommand{\makefrontcovergeneral}[2]{%
+  \typeout{adsphd.cls: Create cover using bleed = (\the\rbleed,\the\lbleed,\the\tbleed,\the\bbleed)}
+  \iffullcoverpage\else
+  % Add background image
+  \begin{textblock*}{\adsphdpaperwidth+\defaultrbleed}(0mm+#1,\tbleed)
+  \textblockcolour{}
+  \includegraphics[width=\adsphdpaperwidth+\defaultrbleed, height=\adsphdpaperheight]{image/cover/cover_front.pdf}
+  %% Alternative set monochromatic background 
+  \textblockcolour{black}
+  \end{textblock*}
+  \fi
+  % Use Helvetica
+  \ifadsphd@helveticaneue
+  \coverfont
+  \else
+  \renewcommand{\sfdefault}{\helvetsfdefault}
+  \fi
+  %
+  % Create header
+  \frontcoverheader{#1}
+  %
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %
+  % Title, subtitle, authorname, text and date can be moved around.
+  % Change the textblock* commands below. 
+  %
+  % Syntax of textblock environment:
+  % 
+  %   \begin{textblock*}{width}(xpos,ypos)
+  %     ...
+  %   \end{textblock*}
+  % 
+  % !! Make sure not to remove the '+#1' part!!!
+  %
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %
+  % Put a DRAFT notifier on the front page to avoid printing a wrong version
+  \ifadsphd@final\else
+    \begin{textblock*}{120mm}(17.5mm+#1,110mm+\tbleed)
+    \textblockcolour{}
+    \vspace{-\parskip}
+    \begin{center}
+        \selectfont\LARGE\coverfont\textbf{\color{red}{
+            DRAFT\\
+            {\small To remove, add `final' to class options}
+        }}
+    \end{center}
+    \end{textblock*}
+  \fi
+  %
+  % Place the title and subtitle
+  \begin{textblock*}{135mm}(10mm+#1,62mm+\tbleed)
+  \textblockcolour{}
+  \vspace{-\parskip}
+  \raggedright
+  \coverfontsize{24}{30}\selectfont\coverfontlight{%
+    \outlinetext{Analysing observations via complex}\\
+    \outlinetext{modelling and Bayesian inference}
+  }\\[1ex]
+  % TODO: Add back subtitle in case I need it at some point
+  %\if\empty\@subtitle \else
+  %  \coverfontsize{20}{25}\selectfont\coverfontlight{\@subtitle}
+  %\fi
+  \end{textblock*}
+  %
+  % Author, description, date
+  % TODO: Fix the placement, its a mess and right border should align with other elements
+  \begin{textblock*}{135mm}(16mm+#1,174mm+\tbleed)
+    \textblockcolour{}%
+    \setlength{\fboxsep}{0pt}%
+  
+    \begin{flushright}
+      {\fontsize{16}{14}\selectfont\coverfontlight
+        \outlinetext{\textbf{\@authorf\ \@authorl}}
+      }\\[0.5em]
+      % TODO: Check if this is an appropriate description
+      % TODO? Think about removing since many people do not seem to have this on titlepage
+      {\fontsize{9}{11}\selectfont\coverfontlight
+        \outlinetext{Thesis submitted for the joint degree}\\
+        \outlinetext{of Doctor of Philosophy (PhD)}
+      }\\[0.5em]
+  
+      {\fontsize{9}{11}\selectfont\coverfontlight
+        \outlinetext{\textbf{\@date}}
+      }
+    \end{flushright}
+  
+  \end{textblock*}
+  %
+  %
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %
+  % Add footer
+  \frontcoverfooter{#2}
+}
+
+\renewcommand{\makebackcovergeneral}[2]{%
+  \typeout{adsphd.cls: Using default back cover page}
+  %
+  % Use Helvetica
+  \ifadsphd@helveticaneue
+  \else
+      \renewcommand{\sfdefault}{\helvetsfdefault}
+  \fi
+  %
+  % Only add empty pages if asked for
+  \ifthenelse{\equal{#2}{1}}
+  {
+      \cleardoublepage \mbox{}
+      \thispagestyle{empty}
+      \newpage
+  }{}
+  \thispagestyle{empty}
+  \iffullcoverpage\else
+  % Add background image
+  % TODO: Using \defaultrbleed even though it is left bleed, since \defaultlbleed value is zero for some reason...
+  \begin{textblock*}{\adsphdpaperwidth+\defaultrbleed}(0mm-\defaultrbleed+#1,\tbleed)
+  \textblockcolour{}
+  \includegraphics[width=\adsphdpaperwidth+\defaultrbleed, height=\adsphdpaperheight]{image/cover/cover_back.pdf}
+  %% Alternative set monochromatic background 
+  %\textblockcolour{black}
+  %\rule{0pt}{\adsphdpaperheight+\tbleed+\bbleed} % Zero width, full height
+  \end{textblock*}
+  \fi
+  % Background colored block
+  %\begin{textblock*}{\adsphdpaperwidth+\lbleed+\rbleed}(#1-\rbleed,18mm+\tbleed)
+  %    \textblockcolour{kulprimaryblue}
+  %    \rule{0pt}{34mm}
+  %\end{textblock*}
+  %
+  % Text box with address
+  \begin{textblock*}{124.5mm}(#1,24.5mm+\tbleed)
+      \textblockcolour{}
+      \vspace{-\parskip}
+      \begin{flushright}
+          \fontsize{7}{10}\coverfont\color{white}
+          \MakeUppercase\@faculty\\[-1mm]
+          \MakeUppercase\@department\\[-1mm]
+          {\@address}\\[-1mm]
+          {\@addresspc}\\[-1mm]
+          \ifdefempty{\@email}{}{\@email\\[-1mm]}
+          \ifdefempty{\@website}{}{\@website}
+      \end{flushright}
+  \end{textblock*}
+  %
+  % Put KULeuven sedes on top
+  \newsavebox{\sedesbox}
+  \savebox{\sedesbox}{\includegraphics*[height=16.3mm]{image/sedes.png}}
+  \begin{textblock*}{\wd\sedesbox}(\adsphdpaperwidth+#1-\wd\sedesbox-10mm,26.9mm+\tbleed)
+      \textblockcolour{}
+      \vspace{-\parskip}
+      \usebox{\sedesbox}
+  \end{textblock*}
+  %
+  % Blue vertical line
+  \begin{textblock*}{1.5mm}(\adsphdpaperwidth+#1-\wd\sedesbox-10mm-6mm,27.5mm+\tbleed) % 6mm to the left of sedes like implied by original function
+      \textblockcolour{kulprimaryblue}
+      \rule{0pt}{15mm}
+  \end{textblock*}
+}
+
+\renewcommand{\makespinegeneral}[4]{%
+  % Use Helvetica
+  \ifadsphd@helveticaneue
+  \else
+  \renewcommand{\sfdefault}{\helvetsfdefault}
+  \fi
+  %
+  % Get adsphdspinewidth as #3
+  \setlength{\adsphdspinewidth}{#3}
+  % 
+  % Get spinetitlewidth as #4
+  \ifthenelse{\equal{#4}{}}
+  {}{
+    \setlength{\spinetitlewidth}{#4}
+  }
+  %
+  % Empty pagestyle
+  \thispagestyle{empty}%
+  %
+  % Only clear page if asked for
+  \ifthenelse{\equal{#2}{1}}
+  {
+    \cleardoublepage \mbox{}%
+  }{}
+  \iffullcoverpage\else
+  % Add background image
+  % TODO: Using \defaultrbleed even though it is left bleed, since \defaultlbleed value is zero for some reason...
+  \begin{textblock*}{\adsphdspinewidth}(0mm+#1,\tbleed)
+  \textblockcolour{}
+  \includegraphics[width=\adsphdspinewidth, height=\adsphdpaperheight]{image/cover/cover_spine.pdf}
+  %% Alternative set monochromatic background 
+  %\textblockcolour{black}
+  %\rule{0pt}{\adsphdpaperheight+\tbleed+\bbleed} % Zero width, full height
+  \end{textblock*}
+  \fi
+  %
+  \newlength{\authorlen}
+  \settowidth{\authorlen}{\fontsize{9}{11}\coverfont\@authorf\ \@authorl}
+  \newlength{\authorlenpenalty}
+  \ifthenelse{\lengthtest{\authorlen>4.2cm}}{%
+      % For really really long names, move the name up a bit more
+      \typeout{adsphd.cls: Really long author name detected in %
+        generation of spine. Moving it up by 4mm.}
+      \setlength{\authorlenpenalty}{4mm}
+  }{%
+    \ifthenelse{\lengthtest{\authorlen>4.0cm}}{%
+      % For really long names, move the name up a bit
+      \typeout{adsphd.cls: Long author name detected in generation of %
+        spine. Moving it up by 3mm.}
+      \setlength{\authorlenpenalty}{3mm}
+    }{%
+    \setlength{\authorlenpenalty}{0mm}
+    }
+  }
+  %
+  \begin{textblock*}{\adsphdspinewidth}(0mm+#1,18mm-\authorlenpenalty+\tbleed) % 9mm whitespace 
+                                        % between blue and first letter of the author name
+                                        % (possibly less because the author name might be
+                                        % reallyreally long)
+  \textblockcolour{}
+  % Rotate the text
+  \begin{turn}{-90}
+  \makebox[\adsphdpaperheight-34mm+\authorlenpenalty][c]{% 20mm(white)+20mm(blue)+9mm(space before name)+7mm(after date)
+  %
+  % Place author
+  \parbox[c][\adsphdspinewidth]{(\authorlen)}{
+  \fontsize{9}{11}\coverfont\@authorf\ \@authorl%
+  }
+  \hfill
+  %
+  % Place title
+  \parbox[c][\adsphdspinewidth]{\spinetitlewidth}{
+    \centering
+    \setstretch{.85}
+    \fontsize{9}{11}\coverfont{\@title}
+  }
+  %
+  % Place date
+  \hfill\fontsize{9}{11}\coverfont\@date
+  }
+  \end{turn}
+  \end{textblock*}
+
+  \renewcommand{\sfdefault}{\origsfdefault}
+}
 
 \makeatother

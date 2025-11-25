@@ -1,0 +1,91 @@
+% thesis.sty - Custom style file to extend standard functionality of adsphd.cls
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{thesis}
+
+% Some new variables
+\def\institute#1{\gdef\@institute{#1}}
+\def\addresscountry#1{\gdef\@addresscountry{#1}}
+
+% Colors University of Edinburgh
+%% Core
+%% https://uoe.sharepoint.com/sites/Brand/SitePages/Corporate-colours.aspx#edinburgh%E2%80%99s-core-corporate-colours
+\definecolor{uoeuniversityred}{HTML/RGB/cmyk}{D50032/213,0,50/.09,1.,.76,.02}
+\definecolor{uoeuniversityblue}{HTML/RGB/cmyk}{041E42/4,30,66/1,,88,.44,.50}
+%% Bright
+%% https://uoe.sharepoint.com/sites/Brand/SitePages/Bright-%26-muted-colours.aspx#edinburgh%E2%80%99s-bright-colours
+\definecolor{uoebrightpink}{HTML/RGB/cmyk}{D0006F/208,0,111/.13,1,.17,.02}
+\definecolor{uoebrightorange}{HTML/RGB/cmyk}{CB6015/203,96,21/.16,.70,1,.05}
+\definecolor{uoebrightyellow}{HTML/RGB/cmyk}{F2A900/242,169,0/.03,.38,.96,0}
+\definecolor{uoebrightgreen}{HTML/RGB/cmyk}{78BE20/120,190,31/.59,0,1,0}
+\definecolor{uoebrightred}{HTML/RGB/cmyk}{A50034/165,0,52/.23,1,.66,.20}
+\definecolor{uoebrighterblue}{HTML/RGB/cmyk}{05C3DE/5,195,222/.69,0,.15,0}
+\definecolor{uoebrightblue}{HTML/RGB/cmyk}{007288/0,114,136/.85,.36,.34,.16}
+\definecolor{uoepurple}{HTML/RGB/cmyk}{830065/131,0,101/.54,1,.20,.13}
+%% Muted
+%% https://uoe.sharepoint.com/sites/Brand/SitePages/Bright-%26-muted-colours.aspx#edinburgh%E2%80%99s-muted-colours
+\definecolor{uoemutedbrown}{HTML/RGB/cmyk}{6D4F47/109,79,71/.40,.57,.54,.47}
+\definecolor{uoejade}{HTML/RGB/cmyk}{487A7B/72,122,123/.72,.33,.45,.18}
+\definecolor{uoedarkgreen}{HTML/RGB/cmyk}{154734/21,71,52/.88,.44,.77,.52}
+\definecolor{uoebrown}{HTML/RGB/cmyk}{653024/101,48,36/.37,.78,.76,.55}
+\definecolor{uoelightblue}{HTML/RGB/cmyk}{C6D6E3/198,214,227/.27,.11,.08,0}
+\definecolor{uoemutedpink}{HTML/RGB/cmyk}{B07C83/176,124,131/.28,.53,.35,.13}
+\definecolor{uoemutedyellow}{HTML/RGB/cmyk}{949500/154,149,0/.42,.28,1,.12}
+\definecolor{uoemutedblue}{HTML/RGB/cmyk}{004F71/0,79,113/.96,.61,.34,.21}
+\definecolor{uoesprucegrey}{HTML/RGB/cmyk}{333F48/51,63,72/.78,.60,.49,.50}
+
+% Custom commands
+\newcommand{\includeabstractde}[1]{%
+  \selectlanguage{ngerman}
+  \IncludeUnnumberedChapterIfExists{#1}{\abstnlname}{\instructionsabstract}
+        {\phantomsection}
+  \ifadsphd@british
+  \selectlanguage{british}
+  \else
+  \selectlanguage{english}
+  \fi
+}
+
+% Modified commands
+\renewcommand{\makefullcoverpage}[2]{%
+  \typeout{Making full cover page}
+  % #1: spinewidth
+  % #2: spinetitlewidth
+  \setlength{\lbleed}{\defaultlbleed}
+  \setlength{\rbleed}{\defaultrbleed}
+  \setlength{\tbleed}{\defaulttbleed}
+  \setlength{\bbleed}{\defaultbbleed}
+  \setlength{\adsphdspinewidth}{#1}
+
+  \newlength{\skiplen}
+
+  % Enable full cover page flag
+  \fullcoverpagetrue
+
+  % Add background image
+  \newlength{\fullwidth}
+  \setlength{\fullwidth}{\rbleed+\adsphdpaperwidth+\adsphdspinewidth+\adsphdpaperwidth+\rbleed}
+  \begin{textblock*}{\fullwidth}(0mm,\tbleed)
+  \textblockcolour{}
+  \includegraphics[width=\fullwidth, height=\adsphdpaperheight]{image/cover/cover_full.pdf}
+  %% Alternative set monochromatic background 
+  %\textblockcolour{black}
+  %\rule{0pt}{\adsphdpaperheight+\tbleed+\bbleed} % Zero width, full height
+  \end{textblock*}
+
+  %\begin{textblock*}{\adsphdspinewidth+4pt}(\lbleed+\rbleed+\adsphdpaperwidth-2pt, 20mm)
+  %\textblockcolour{}
+  %\includegraphics[width=\adsphdspinewidth+4pt,height=20mm]{image/blue}
+  %\end{textblock*}
+
+  \setlength{\skiplen}{0mm+\rbleed}
+  \makebackcovergeneral{\skiplen}{0}
+
+  \setlength{\skiplen}{\lbleed+\rbleed+\adsphdpaperwidth}
+  \makespinegeneral{\skiplen}{0}{#1}{#2}
+
+  \setlength{\skiplen}{\rbleed+2\lbleed+\adsphdpaperwidth+\adsphdspinewidth}
+  \makefrontcovergeneral{\skiplen}{0}
+
+  \drawextracroplines
+}
