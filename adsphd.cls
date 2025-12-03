@@ -546,10 +546,10 @@
 \newcommand{\popabstname}{Popularized Abstract}
 \newcommand{\popabstnlname}{Gepopulariseerde Samenvatting}
 \newcommand{\abstname}{Abstract}
-\newcommand{\abstnlname}{Beknopte samenvatting}
+\newcommand{\abstnlname}{Beknopte Samenvatting}
 \newcommand{\tocname}{Contents}
-\newcommand{\pubname}{List of publications}
-\newcommand{\cvname}{Curriculum vitae}
+\newcommand{\pubname}{List of Publications}
+\newcommand{\cvname}{Curriculum Vitae}
 % The following _are_ used in practice as the contents of these
 % chapters are generated automatically:
 \renewcommand{\bibname}{Bibliography}
@@ -876,22 +876,38 @@ LuaLaTeX or XeTeX}
 \newlength{\@chaptitlemoveup}
 \newcommand{\chaptitlemoveup}[1]{\setlength{\@chaptitlemoveup}{#1}}
 
+\usepackage{xstring} % Required for string manipulation
+
+% Helper macro to extract the last folder name from a path
+\newcommand{\extractlastfolder}[1]{%
+  % Count how many slashes there are
+  \StrCount{#1}{/}[\slashcount]%
+  % If there are no slashes, the whole thing is the "folder"
+  \IfEq{\slashcount}{0}{%
+    \def\lastfolder{#1}%
+  }{%
+    % Otherwise, take the part after the last slash
+    \StrBehind[\slashcount]{#1}{/}[\lastfolder]%
+  }%
+}
+
 \newcommand{\IncludeUnnumberedChapterIfExists}[4]{%
   \typeout{adsphd.cls: chapter `#1'}
   \cleardoublepage
   #4
-  \IfFileExists{\chaptersdir/#1/#1.tex}{
+  \extractlastfolder{#1}%
+  \IfFileExists{\chaptersdir/#1/\lastfolder.tex}{%
     \let\orig@chapter=\chapter
     \renewcommand\chapter{\if@openright\cleardoublepage\else\clearpage\fi
       \thispagestyle{plain}%
       \global\@topnum\z@
       \@afterindentfalse
       \secdef\@nonumberchapter\@snonumberchapter}
-    \include{\chaptersdir/#1/#1}
+    \include{\chaptersdir/#1/\lastfolder.tex}
     \let\chapter=\orig@chapter
-  }{
+  }{%
     \chapter*{#2}
-    {\textcolor{red}{Input file \chaptersdir/#1/#1.tex does not exist. Make
+    {\textcolor{red}{Input file \chaptersdir/#1/\lastfolder.tex does not exist. Make
     sure its starts with ``\textbackslash{}chapter\{#2\}''. To not
     include this chapter in the table of contents, use the starred
     version of the \textbackslash{}chapter command\ldots }}
@@ -900,9 +916,10 @@ LuaLaTeX or XeTeX}
 }
 
 \newcommand{\includechapter}[1]{%
+  \extractlastfolder{#1}%
   \graphicspath{{\chaptersdir/#1/image/}}%
   %\cleardoublepage%
-  \include{\chaptersdir/#1/#1}%
+  \include{\chaptersdir/#1/\lastfolder}%
 }
 
 \newcommand{\includepreface}[1]{%
@@ -1014,12 +1031,12 @@ LuaLaTeX or XeTeX}
 \newcommand{\includeappendix}[1]{%
   \typeout{adsphd.cls: chapter `#1'}
   \cleardoublepage
-  \IfFileExists{\chaptersdir/#1/#1.tex}{
-    \graphicspath{{\chaptersdir/#1/image/}}%
-    \include{\chaptersdir/#1/#1}
-  }{
+  \extractlastfolder{#1}%
+  \IfFileExists{\chaptersdir/#1/\lastfolder.tex}{%
+    \includechapter{#1}
+  }{%
     \chapter{#1}
-    {\textcolor{red}{Input file \chaptersdir/#1/#1.tex does not exist.
+    {\textcolor{red}{Input file \chaptersdir/#1/\lastfolder.tex does not exist.
     \instructionsappendices}}
   }
 }

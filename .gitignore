@@ -1,6 +1,6 @@
-chapters/*/Makefile
-chapters/*/*.aux
-chapters/*/*.log
+chapters/**/Makefile
+chapters/**/*.aux
+chapters/**/*.log
 defs.tex
 q.tex
 thesis.aux
@@ -43,3 +43,5 @@ diffchapters
 adsphd_diff.cls
 **-eps-converted-to.pdf
 image/cover/cover_*.pdf
+**/*.tmp
+.env

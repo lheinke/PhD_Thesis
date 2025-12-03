@@ -7,6 +7,8 @@
 \def\institute#1{\gdef\@institute{#1}}
 \def\addresscountry#1{\gdef\@addresscountry{#1}}
 
+\newcommand{\ackname}{Acknowledgements}
+
 % Colors University of Edinburgh
 %% Core
 %% https://uoe.sharepoint.com/sites/Brand/SitePages/Corporate-colours.aspx#edinburgh%E2%80%99s-core-corporate-colours
@@ -44,6 +46,11 @@
   \else
   \selectlanguage{english}
   \fi
+}
+
+\newcommand{\includeacknowledgements}[1]{%
+  \IncludeUnnumberedChapterIfExists{#1}{\ackname}{\instructionspreface}%
+      {\phantomsection}
 }
 
 % Modified commands

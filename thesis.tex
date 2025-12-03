@@ -159,11 +159,12 @@
 
 \frontmatter % to get \pagenumbering{roman}
 
-%\includepreface{preface}
+%\includepreface{0_frontmatter/preface}
 %\includepopabstract{popabstract}
 %\includepopabstractnl{popabstractnl}
-%\includeabstract{abstract}
+\includeabstract{0_frontmatter/abstract}
 %\includeabstractnl{abstractnl}
+%\includeabstractde{abstractde}
 
 % To create a list of abbreviations, there are 2 options
 % 1. manual creation of list of abbreviations and inclusion as a chapter
@@ -194,23 +195,30 @@
 \mainmatter % to get \pagenumbering{arabic}
 
 % Show instructions on a separate page
+% TODO: Figure out whether or not I actually need this
 \instructionschapters\cleardoublepage
 
-\includechapter{introduction}
-\includechapter{manual} % Remove this chapter
+%\includechapter{z_template/manual} % Remove this chapter
+%\includechapter{z_template/introduction}
 
 % Insert here your own chapters
 % Chapters are expected to be in a tex-file with the given name dot
 % tex and in a directory with the given name in the chapters
 % directory.
 
-\includechapter{conclusion}
+\includechapter{1_introduction}
+\includechapter{2_transspec}
+\includechapter{3_datareduct}
+% TODO? Rename into infocontent?
+\includechapter{4_infocont}
+\includechapter{5_subneptunes}
+\includechapter{6_conclusions}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \appendix
 
-\includeappendix{myappendix}
+\includeappendix{a_appendix}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \backmatter
@@ -223,8 +231,7 @@
 %\printbibliography[title=\bibname]
 \instructionsbibliography
 
-
-
+% TODO? Move this to a dedicated chapter file?!
 % Uncomment the appropriate sentences in and expand the text where needed to make it more specific and add topics if they are not covered by any of the indicated topics.
 \useOfGenAI{%
   % I did not use generative AI assistance tools during the research/writing process of my thesis, except for mere language assistance. % The use of GenAI tools for language assistance does not need to be further specified. (The part 'except for mere language assistance' can be left out if not applicable)
@@ -239,10 +246,10 @@
 }
 \includegenai{}
 
-
-\includecv{curriculum}
-
-\includepublications{publications}
+% TODO: Decide what to do about the lots of unnecessary (?) empty pages? Perhaps only needed for printing?
+\includecv{x_backmatter/aboutauthor}
+\includepublications{x_backmatter/publications}
+\includeacknowledgements{x_backmatter/acknowledgements}
 
 \makebackcover
 
